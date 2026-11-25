@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="100%" height="100%">
+  <defs>
+    <linearGradient id="gradPrimary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f766e" />
+      <stop offset="100%" stop-color="#115e59" />
+    </linearGradient>
+    <linearGradient id="gradGold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24" />
+      <stop offset="100%" stop-color="#d97706" />
+    </linearGradient>
+    <filter id="shadowSpempa" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="3" flood-opacity="0.2" />
+    </filter>
+  </defs>
+
+  <!-- Bingkai Segilima / Perisai Pendidikan Karakter Pancasila -->
+  <polygon points="120,14 220,50 185,210 55,210 20,50" fill="#ffffff" stroke="#0f766e" stroke-width="6" />
+  <polygon points="120,24 208,56 177,198 63,198 32,56" fill="none" stroke="#d97706" stroke-width="2.5" stroke-dasharray="5,2.5" />
+
+  <!-- Obor Pendidikan & Semangat Prestasi -->
+  <!-- Nyala Api Merah - Emas -->
+  <path d="M120 40 C110 55, 105 70, 114 82 C116 85, 124 85, 126 82 C135 70, 130 55, 120 40 Z" fill="url(#gradGold)" filter="url(#shadowSpempa)" />
+  <path d="M120 52 C115 62, 112 72, 117 78 C118 79, 122 79, 123 78 C128 72, 125 62, 120 52 Z" fill="#ef4444" />
+  <!-- Gagang Obor Logam Emas -->
+  <path d="M113 83 L127 83 L124 100 L116 100 Z" fill="#d97706" />
+
+  <!-- Sayap Buku Pengetahuan Terbuka -->
+  <path d="M62 128 C85 110, 112 122, 120 132 C128 122, 155 110, 178 128 C162 148, 128 142, 120 155 C112 142, 78 148, 62 128 Z" fill="url(#gradPrimary)" />
+  <path d="M68 131 C90 117, 113 126, 120 135 C127 126, 150 117, 172 131" fill="none" stroke="#fef3c7" stroke-width="2.5" />
+
+  <!-- Angka 4 / Simbol SMP 4 Purwokerto -->
+  <circle cx="120" cy="112" r="16" fill="#fef3c7" stroke="#0f766e" stroke-width="2" />
+  <text x="120" y="118" font-family="'Arial Black', sans-serif" font-size="16" font-weight="900" fill="#0f766e" text-anchor="middle">
+    4
+  </text>
+
+  <!-- Pita Penyangga -->
+  <path d="M42 168 Q120 192 198 168 L190 186 Q120 208 50 186 Z" fill="#134e4a" />
+
+  <!-- Teks Pita -->
+  <text x="120" y="180" font-family="Arial, sans-serif" font-size="8.5" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="1">
+    SMP NEGERI 4 PURWOKERTO
+  </text>
+  
+  <text x="120" y="196" font-family="Arial, sans-serif" font-size="7" font-weight="bold" fill="#f59e0b" text-anchor="middle" letter-spacing="2">
+    BANYUMAS
+  </text>
+</svg>

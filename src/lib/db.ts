@@ -1,0 +1,427 @@
+import fs from 'fs';
+import path from 'path';
+
+export interface Post {
+  id: string;
+  title: string;
+  slug: string;
+  category: 'berita' | 'pengumuman' | 'prestasi';
+  excerpt: string;
+  content: string;
+  cover_image_url: string;
+  is_published: boolean;
+  published_at: string;
+  created_at: string;
+  updated_at: string;
+  author?: string;
+}
+
+export interface GalleryItem {
+  id: string;
+  image_url: string;
+  caption: string;
+}
+
+export interface Gallery {
+  id: string;
+  title: string;
+  description: string;
+  event_date: string;
+  cover_image_url: string;
+  created_at: string;
+  items: GalleryItem[];
+}
+
+export interface StaffMember {
+  id: string;
+  name: string;
+  role_or_subject: string;
+  nip_or_id: string;
+  photo_url: string;
+  is_active: boolean;
+  sort_order: number;
+  category: 'pimpinan' | 'guru' | 'staf';
+}
+
+export interface Extracurricular {
+  id: string;
+  name: string;
+  category: string;
+  schedule: string;
+  description: string;
+  image_url: string;
+  coach?: string;
+}
+
+export interface ContactMessage {
+  id: string;
+  sender_name: string;
+  sender_email_or_phone: string;
+  subject: string;
+  message: string;
+  is_read: boolean;
+  created_at: string;
+}
+
+export interface SchoolSettings {
+  school_name: string;
+  tagline: string;
+  npsn: string;
+  accreditation: string;
+  address: string;
+  phone: string;
+  email: string;
+  operating_hours: string;
+  principal_name: string;
+  principal_welcome: string;
+  principal_photo: string;
+  history: string;
+  vision: string;
+  missions: string[];
+  spmb_announcement: string;
+  spmb_schedule: string;
+  spmb_requirements: string[];
+  spmb_link: string;
+}
+
+export interface DatabaseSchema {
+  posts: Post[];
+  galleries: Gallery[];
+  staff_members: StaffMember[];
+  extracurriculars: Extracurricular[];
+  contact_messages: ContactMessage[];
+  school_settings: SchoolSettings;
+}
+
+const DATA_DIR = path.join(process.cwd(), 'data');
+const DATA_FILE = path.join(DATA_DIR, 'db.json');
+
+export const INITIAL_DATA: DatabaseSchema = {
+  school_settings: {
+    school_name: "SMP Negeri 4 Purwokerto",
+    tagline: "Berakhlak Mulia, Berprestasi Tinggi, Berwawasan Lingkungan dan Digital",
+    npsn: "20301962",
+    accreditation: "A (Unggul)",
+    address: "Jl. Kertawibawa No. 575, Pasir Kidul, Kec. Purwokerto Barat, Kabupaten Banyumas, Jawa Tengah 53133",
+    phone: "(0281) 635053",
+    email: "smp4_pwt@yahoo.co.id",
+    operating_hours: "Senin – Sabtu (07.00 – 16.00 WIB), Minggu Libur",
+    principal_name: "Ratmoko, S.Pd., M.MM.",
+    principal_welcome: "Selamat datang di Website Resmi SMP Negeri 4 Purwokerto (Spempa). Kami berkomitmen mewujudkan layanan pendidikan bermutu tinggi yang berakar pada budi pekerti luhur, penguasaan sains teknologi terkini, serta pelestarian nilai-nilai kearifan budaya Banyumasan. Semoga media komunikasi ini menjadi jembatan harmonis antara sekolah, siswa, wali murid, dan masyarakat.",
+    principal_photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=600",
+    history: "SMP Negeri 4 Purwokerto (dikenal akrab dengan julukan Spempa) adalah salah satu sekolah menengah pertama negeri rujukan di Purwokerto Barat, Banyumas. Berlokasi strategis di Jl. Kertawibawa No. 575 Pasir Kidul, sekolah ini telah membuktikan dedikasinya dalam melahirkan generasi berkarakter Profil Pelajar Pancasila yang tangguh, berprestasi di tingkat kabupaten hingga nasional, serta peduli terhadap kelestarian lingkungan hidup.",
+    vision: "Terwujudnya Generasi yang Berakhlak Mulia, Unggul dalam Prestasi, Berbudaya Lingkungan, dan Terampil Memanfaatkan Teknologi Informasi.",
+    missions: [
+      "Menanamkan nilai-nilai keimanan, ketaqwaan, dan budi pekerti luhur dalam keseharian seluruh warga sekolah.",
+      "Mengembangkan pembelajaran aktif, inovatif, kreatif, dan menyenangkan berbasis teknologi informasi (TIK).",
+      "Memfasilitasi bakat dan minat peserta didik di bidang akademik, seni budaya tradisional Banyumas, keolahragaan, dan riset sains.",
+      "Menciptakan lingkungan sekolah yang ASRI (Aman, Sejuk, Rindang, Indah) dan ramah anak.",
+      "Membangun kemitraan sinergis dan transparan dengan orang tua peserta didik, komite sekolah, dan masyarakat luas."
+    ],
+    spmb_announcement: "Penerimaan Peserta Didik Baru (PPDB) SMP Negeri 4 Purwokerto dibuka secara terpusat melalui portal resmi Dinas Pendidikan Kabupaten Banyumas dengan 4 jalur penerimaan resmi.",
+    spmb_schedule: "Pendaftaran Daring: Juni – Juli | Layanan Helpdesk & Verifikasi Berkas: Senin–Jumat 08.00–14.00 WIB",
+    spmb_requirements: [
+      "Ijazah SD/MI atau Surat Keterangan Lulus (SKL) Asli",
+      "Akta Kelahiran Calon Peserta Didik (Asli & Fotokopi)",
+      "Kartu Keluarga (KK) Banyumas / zonasi terdekat (minimal 1 tahun terbit)",
+      "Pasfoto terbaru ukuran 3x4 berwarna (3 lembar)",
+      "Piagam kejuaraan berjenjang minimal tingkat Kabupaten (khusus Jalur Prestasi)",
+      "Kartu KIP/PKH/KKS yang masih berlaku resmi (khusus Jalur Afirmasi)"
+    ],
+    spmb_link: "https://ppdb.banyumaskab.go.id"
+  },
+  posts: [
+    {
+      id: "post-1",
+      title: "Siswa SMPN 4 Purwokerto Raih Juara 1 Lomba Cerdas Cermat Sains Banyumas",
+      slug: "siswa-smpn-4-purwokerto-raih-juara-1-cerdas-cermat-sains",
+      category: "prestasi",
+      excerpt: "Tim delegasi sains Spempa berhasil mengharumkan nama sekolah setelah meraih podium juara pertama pada ajang kompetisi sains pelajar.",
+      content: "<p>Kabar membanggakan datang dari kontingen sains SMP Negeri 4 Purwokerto. Setelah melalui babak penyisihan hingga grand final yang ketat, tim yang dibimbing guru IPA berhasil meraih Juara 1 Lomba Cerdas Cermat Sains tingkat Kabupaten Banyumas.</p><p>Kepala Sekolah Ratmoko, S.Pd., M.MM. mengapresiasi kerja keras para guru pembina ekstrakurikuler sains dan seluruh siswa yang telah berjuang maksimal mengharumkan nama Spempa.</p>",
+      cover_image_url: "https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=800",
+      is_published: true,
+      published_at: "2026-03-10T08:00:00Z",
+      created_at: "2026-03-10T08:00:00Z",
+      updated_at: "2026-03-10T08:00:00Z",
+      author: "Humas Spempa"
+    },
+    {
+      id: "post-2",
+      title: "Gelar Karya P5 Bertema Kearifan Budaya Banyumasan di Kampus Spempa",
+      slug: "gelar-karya-p5-kearifan-budaya-banyumasan-spempa",
+      category: "berita",
+      excerpt: "Siswa-siswi SMPN 4 Purwokerto menampilkan pertunjukan musik tradisional, pameran batik, dan kuliner khas daerah dalam festival P5.",
+      content: "<p>SMP Negeri 4 Purwokerto menggelar perhelatan Gelar Karya Proyek Penguatan Profil Pelajar Pancasila (P5) yang berlangsung meriah di lapangan utama sekolah. Acara ini memamerkan aneka kreasi kerajinan tangan, pentas tari tradisi Banyumasan, serta atraksi musik kenthongan.</p><p>Melalui kegiatan ini, siswa diajak mencintai kebudayaan lokal sekaligus melatih jiwa gotong royong dan kemandirian berkarya.</p>",
+      cover_image_url: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&q=80&w=800",
+      is_published: true,
+      published_at: "2026-04-14T09:00:00Z",
+      created_at: "2026-04-14T09:00:00Z",
+      updated_at: "2026-04-14T09:00:00Z",
+      author: "Admin Sekolah"
+    },
+    {
+      id: "post-3",
+      title: "Sosialisasi Penerimaan Peserta Didik Baru (PPDB / SPMB) Tahun Ajaran Baru",
+      slug: "sosialisasi-ppdb-spmb-smpn4-purwokerto",
+      category: "pengumuman",
+      excerpt: "Informasi jadwal alur pendaftaran, persyaratan berkas, dan titik koordinat zonasi SMP Negeri 4 Purwokerto bagi calon wali murid.",
+      content: "<p>Diberitahukan kepada segenap orang tua/wali calon murid lulusan SD/MI se-Purwokerto dan sekitarnya bahwa pendaftaran PPDB SMPN 4 Purwokerto segera dibuka. Panitia sekolah membuka layanan posko konsultasi bagi orang tua yang mengalami kesulitan dalam proses pendaftaran akun daring di portal resmi Banyumas.</p>",
+      cover_image_url: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&q=80&w=800",
+      is_published: true,
+      published_at: "2026-05-18T10:00:00Z",
+      created_at: "2026-05-18T10:00:00Z",
+      updated_at: "2026-05-18T10:00:00Z",
+      author: "Panitia PPDB"
+    }
+  ],
+  galleries: [
+    {
+      id: "gal-1",
+      title: "Kegiatan Perkemahan Pramuka Gugus Depan Spempa",
+      description: "Pelatihan kepemimpinan, kemandirian dan baris berbaris regu penggalang SMPN 4 Purwokerto.",
+      event_date: "2026-02-22",
+      cover_image_url: "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&q=80&w=800",
+      created_at: "2026-02-23T10:00:00Z",
+      items: [
+        { id: "gi-1", image_url: "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&q=80&w=800", caption: "Upacara pembukaan kemah penggalang" },
+        { id: "gi-2", image_url: "https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&q=80&w=800", caption: "Latihan keterampilan tali-temali dan kompas" }
+      ]
+    },
+    {
+      id: "gal-2",
+      title: "Gelar Seni Tradisional & Kenthongan",
+      description: "Pementasan musik bambu kenthongan dan tari kreasi siswa di aula pertemuan.",
+      event_date: "2026-04-15",
+      cover_image_url: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=800",
+      created_at: "2026-04-16T10:00:00Z",
+      items: [
+        { id: "gi-3", image_url: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=800", caption: "Atraksi kenthongan Spempa" }
+      ]
+    },
+    {
+      id: "gal-3",
+      title: "Ujian Berbasis Komputer di Lab TIK",
+      description: "Fasilitas laboratorium komputer modern SMPN 4 Purwokerto untuk asesmen digital.",
+      event_date: "2026-05-12",
+      cover_image_url: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&q=80&w=800",
+      created_at: "2026-05-13T10:00:00Z",
+      items: [
+        { id: "gi-4", image_url: "https://images.unsplash.com/photo-1580582932707-520aed937b7b?auto=format&fit=crop&q=80&w=800", caption: "Siswa melaksanakan evaluasi daring" }
+      ]
+    }
+  ],
+  staff_members: [
+    {
+      id: "staff-1",
+      name: "Ratmoko, S.Pd., M.MM.",
+      role_or_subject: "Kepala Sekolah",
+      nip_or_id: "19670815 199103 1 008",
+      photo_url: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=500",
+      is_active: true,
+      sort_order: 1,
+      category: "pimpinan"
+    },
+    {
+      id: "staff-2",
+      name: "Dr. Suhasto, S.Pd., M.Pd.",
+      role_or_subject: "Wakil Kepala Sekolah / Guru PJOK",
+      nip_or_id: "19720412 199702 1 003",
+      photo_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=500",
+      is_active: true,
+      sort_order: 2,
+      category: "pimpinan"
+    },
+    {
+      id: "staff-3",
+      name: "Sulistiowati",
+      role_or_subject: "Kepala Tata Usaha & Operator Dapodik",
+      nip_or_id: "19780520 200701 2 011",
+      photo_url: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=500",
+      is_active: true,
+      sort_order: 3,
+      category: "staf"
+    },
+    {
+      id: "staff-4",
+      name: "Danang Guruh S., S.Kom.",
+      role_or_subject: "Guru Informatika & Pengelola Lab Komputer",
+      nip_or_id: "19870314 201101 1 009",
+      photo_url: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=500",
+      is_active: true,
+      sort_order: 4,
+      category: "guru"
+    },
+    {
+      id: "staff-5",
+      name: "Umi Haniah, S.Pd.I",
+      role_or_subject: "Guru Pendidikan Agama Islam (PAI)",
+      nip_or_id: "19830211 200902 2 006",
+      photo_url: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=500",
+      is_active: true,
+      sort_order: 5,
+      category: "guru"
+    },
+    {
+      id: "staff-6",
+      name: "Alfi Ardhiati S., S.Pd.",
+      role_or_subject: "Guru Bahasa Indonesia",
+      nip_or_id: "19860918 201001 2 018",
+      photo_url: "https://images.unsplash.com/photo-1580894732483-3c9f2858807d?auto=format&fit=crop&q=80&w=500",
+      is_active: true,
+      sort_order: 6,
+      category: "guru"
+    },
+    {
+      id: "staff-7",
+      name: "Ari Sagiyanti, S.Pd.",
+      role_or_subject: "Guru Ilmu Pengetahuan Alam (IPA)",
+      nip_or_id: "19790615 200501 2 010",
+      photo_url: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80&w=500",
+      is_active: true,
+      sort_order: 7,
+      category: "guru"
+    },
+    {
+      id: "staff-8",
+      name: "Dwi Ambarwati, S.Pd.",
+      role_or_subject: "Guru Matematika",
+      nip_or_id: "19841103 200803 2 007",
+      photo_url: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=500",
+      is_active: true,
+      sort_order: 8,
+      category: "guru"
+    },
+    {
+      id: "staff-9",
+      name: "Anggari A.N.K., S.Pd.",
+      role_or_subject: "Guru Bimbingan Konseling (BK)",
+      nip_or_id: "19910425 201903 2 014",
+      photo_url: "https://images.unsplash.com/photo-1594744803329-e58b31de8bf5?auto=format&fit=crop&q=80&w=500",
+      is_active: true,
+      sort_order: 9,
+      category: "guru"
+    },
+    {
+      id: "staff-10",
+      name: "Endah Fadjar Budiarti, S.Pd.",
+      role_or_subject: "Guru Ilmu Pengetahuan Sosial (IPS)",
+      nip_or_id: "19750822 200212 2 004",
+      photo_url: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=500",
+      is_active: true,
+      sort_order: 10,
+      category: "guru"
+    },
+    {
+      id: "staff-11",
+      name: "Harisma Dwi K., S.Pd.",
+      role_or_subject: "Guru Seni Budaya & Pembina Musik",
+      nip_or_id: "19920716 202012 1 005",
+      photo_url: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=500",
+      is_active: true,
+      sort_order: 11,
+      category: "guru"
+    },
+    {
+      id: "staff-12",
+      name: "Istan Yoga P., S.Pd.",
+      role_or_subject: "Guru Bahasa Inggris",
+      nip_or_id: "19890128 201503 1 003",
+      photo_url: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=500",
+      is_active: true,
+      sort_order: 12,
+      category: "guru"
+    }
+  ],
+  extracurriculars: [
+    {
+      id: "ekskul-1",
+      name: "Pramuka Gugus Depan Spempa",
+      category: "Wajib & Kepanduan",
+      schedule: "Jumat, 14.00 - 16.30 WIB",
+      description: "Menumbuhkan kedisiplinan, kepemimpinan, ketangguhan mental, dan kecintaan pada tanah air.",
+      image_url: "https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&q=80&w=600",
+      coach: "Dr. Suhasto, S.Pd., M.Pd."
+    },
+    {
+      id: "ekskul-2",
+      name: "PMR (Palang Merah Remaja)",
+      category: "Kemanusiaan & Kesehatan",
+      schedule: "Sabtu, 09.00 - 11.00 WIB",
+      description: "Pelatihan pertolongan pertama pada kecelakaan (P3K), kesiapsiagaan bencana, dan pola hidup bersih sehat.",
+      image_url: "https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&q=80&w=600",
+      coach: "Ari Sagiyanti, S.Pd."
+    },
+    {
+      id: "ekskul-3",
+      name: "Seni Musik Tradisional Kenthongan",
+      category: "Seni Budaya Banyumasan",
+      schedule: "Rabu, 15.00 - 17.00 WIB",
+      description: "Pelestarian instrumen bambu khas Banyumas dengan ritme rancak dinamis penuh kekompakan.",
+      image_url: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&q=80&w=600",
+      coach: "Harisma Dwi K., S.Pd."
+    },
+    {
+      id: "ekskul-4",
+      name: "Klub Sains & Matematika (OSN Spempa)",
+      category: "Akademik & Riset",
+      schedule: "Selasa & Kamis, 14.30 - 16.30 WIB",
+      description: "Pembinaan intensif persiapan olimpiade matematika dan sains bagi siswa berpotensi.",
+      image_url: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?auto=format&fit=crop&q=80&w=600",
+      coach: "Dwi Ambarwati, S.Pd."
+    },
+    {
+      id: "ekskul-5",
+      name: "Bola Voli & Basket",
+      category: "Olahraga Prestasi",
+      schedule: "Senin & Kamis, 15.30 - 17.30 WIB",
+      description: "Pelatihan teknik dasar permainan bola besar, strategi tim, dan kebugaran fisik siswa.",
+      image_url: "https://images.unsplash.com/photo-1546519638-68e109498ffc?auto=format&fit=crop&q=80&w=600",
+      coach: "Arsand Chrisandi, S.Pd."
+    },
+    {
+      id: "ekskul-6",
+      name: "Paskibra Spempa",
+      category: "Kedisiplinan & PBB",
+      schedule: "Sabtu, 14.00 - 16.30 WIB",
+      description: "Latihan formasi pengibaran bendera, ketegasan baris-berbaris, dan jiwa patriotisme tinggi.",
+      image_url: "https://images.unsplash.com/photo-1541829070764-84a7d30dd3f3?auto=format&fit=crop&q=80&w=600",
+      coach: "Rizal Amin, S.Pd."
+    }
+  ],
+  contact_messages: [
+    {
+      id: "msg-1",
+      sender_name: "Agus Pratama",
+      sender_email_or_phone: "agus.pratama@gmail.com",
+      subject: "Informasi Pendaftaran Murid Baru Jalur Zonasi",
+      message: "Selamat siang Bapak/Ibu Panitia, apakah kelurahan Karanglewas Lor termasuk zona terdekat dengan SMPN 4 Purwokerto? Terima kasih.",
+      is_read: false,
+      created_at: "2026-05-24T14:20:00Z"
+    }
+  ]
+};
+
+function ensureDataFile() {
+  if (!fs.existsSync(DATA_DIR)) {
+    fs.mkdirSync(DATA_DIR, { recursive: true });
+  }
+  // Tulis ulang dengan data terbaru jika ada pembaruan
+  if (!fs.existsSync(DATA_FILE)) {
+    fs.writeFileSync(DATA_FILE, JSON.stringify(INITIAL_DATA, null, 2), 'utf-8');
+  }
+}
+
+export function getDb(): DatabaseSchema {
+  ensureDataFile();
+  try {
+    const raw = fs.readFileSync(DATA_FILE, 'utf-8');
+    return JSON.parse(raw) as DatabaseSchema;
+  } catch {
+    return INITIAL_DATA;
+  }
+}
+
+export function saveDb(data: DatabaseSchema) {
+  ensureDataFile();
+  fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2), 'utf-8');
+}
